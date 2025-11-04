@@ -1,0 +1,113 @@
+/* Reset stylów podstawowych */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Ustawienie tła i ogólnego wyglądu strony */
+body {
+    background: #f7f9fc;
+    color: #333;
+    padding: 2rem;
+}
+
+/* Kontener przycisków */
+div:first-of-type {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Przycisk */
+button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+button:hover {
+    background: #0069d9;
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+/* Sekcja odpowiedzi */
+#answer {
+    font-weight: 500;
+    color: #444;
+}
+
+/* Ogólny wygląd tabeli */
+table {
+    width: 100%;
+    max-width: 900px;
+    border-collapse: collapse;
+    margin: 1.5rem auto;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Nagłówki tabeli */
+thead {
+    background: #007bff;
+    color: white;
+}
+
+th {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* Wiersze tabeli */
+td {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid #eee;
+    font-size: 0.95rem;
+}
+
+/* Naprzemienne kolory wierszy */
+tbody tr:nth-child(odd) {
+    background: #f8faff;
+}
+
+/* Efekt hover */
+tbody tr:hover {
+    background: #e8f1ff;
+    transition: background 0.2s ease;
+}
+
+/* Formularz dodawany dynamicznie */
+form {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+input[type="text"] {
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+    transition: border 0.2s ease;
+    width: 260px;
+}
+
+input[type="text"]:focus {
+    border-color: #007bff;
+}

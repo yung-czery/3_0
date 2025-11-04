@@ -59,8 +59,35 @@ button1.addEventListener('click', () => {
 });
 
 
-button2.addEventListener('click', () => {
+button2.addEventListener('click', async () => {
+  try {
+    const { data } = await axios.get('http://localhost:3000/stations');
+    const stations = data.results;
+    console.log(stations);
 
+    const table = document.getElementById('cw2-table');
+    let tableBd = table.querySelector('tbody');
+    if (!tableBd) {
+      tableBd = document.createElement('tbody');
+      table.appendChild(tableBd);
+    }
+    tableBd.innerHTML = '';
+
+    stations.forEach(station => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+          <td>${station.id}</td>
+          <td>${station.name}</td>
+          <td>${station.state}</td>
+          <td>${station.latitude.toLocaleString()}</td>
+          <td>${station.longitude.toLocaleString()}</td>
+        `;
+      tableBd.appendChild(row);
+    });
+    table.style.visibility = 'visible';
+  } catch (e) {
+    console.error(e);
+  }
 });
 
 
