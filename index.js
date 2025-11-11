@@ -4,7 +4,17 @@ const button3 = document.getElementById('cw3');
 
 const answer = document.getElementById('answer');
 
+function resetPage() {
+  answer.innerHTML = '';
+  const tables = document.querySelectorAll('table');
+  tables.forEach(table => table.style.display = 'none');
+}
+
 button1.addEventListener('click', () => {
+  resetPage();
+
+  const table = document.getElementById('cw1-table');
+
   const input = document.createElement('input');
   input.type = 'text';
   input.name = 'capital';
@@ -17,7 +27,7 @@ button1.addEventListener('click', () => {
 
   form.appendChild(input);
   form.appendChild(submitBtn);
-  document.body.appendChild(form);
+  answer.appendChild(form);
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -25,13 +35,16 @@ button1.addEventListener('click', () => {
     const formData = new FormData(e.target);
     const capital = formData.get('capital');
 
+    if (!capital) {
+      alert('Wprowadzono puste pole.');
+      return;
+    }
+
     try {
       const { data } = await axios.get(`https://restcountries.com/v3.1/capital/${capital}`);
 
       console.log(data);
       const country = data[0];
-
-      const table = document.getElementById('cw1-table');
 
       let tableBd = table.querySelector('tbody');
       if (!tableBd) {
@@ -50,7 +63,7 @@ button1.addEventListener('click', () => {
         `;
       tableBd.appendChild(row);
 
-      table.style.visibility = 'visible';
+      table.style.display = 'table';
     } catch (e) {
       console.error(e);
       alert('Nie znaleziono kraju o takiej stolicy.');
@@ -60,6 +73,8 @@ button1.addEventListener('click', () => {
 
 
 button2.addEventListener('click', async () => {
+  resetPage();
+
   try {
     const { data } = await axios.get('http://localhost:3000/stations');
     const stations = data.results;
@@ -78,13 +93,13 @@ button2.addEventListener('click', async () => {
       row.innerHTML = `
           <td>${station.id}</td>
           <td>${station.name}</td>
-          <td>${station.state}</td>
+          <td>${station.state ?? 'N/A'}</td>
           <td>${station.latitude.toLocaleString()}</td>
           <td>${station.longitude.toLocaleString()}</td>
         `;
       tableBd.appendChild(row);
     });
-    table.style.visibility = 'visible';
+    table.style.display = 'table';
   } catch (e) {
     console.error(e);
   }
