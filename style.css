@@ -154,3 +154,16 @@ form button:active {
     justify-content: center;
     align-items: center;
 }
+
+#gifs {
+    margin-top: 2rem;
+    column-count: 3;
+    column-gap: 1rem;
+}
+
+#gifs img {
+    width: 100%;
+    display: block;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+}

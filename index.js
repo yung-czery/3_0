@@ -3,6 +3,7 @@ const button2 = document.getElementById('cw2');
 const button3 = document.getElementById('cw3');
 const button4 = document.getElementById('cw4');
 const button5 = document.getElementById('cw5');
+const button6 = document.getElementById('cw6');
 
 const answer = document.getElementById('answer');
 
@@ -165,7 +166,7 @@ button4.addEventListener('click', async () => {
       option.value = id;
       option.textContent = id;
       select.appendChild(option);
-    })
+    });
     select.disabled = false;
 
   } catch (e) {
@@ -213,7 +214,7 @@ button4.addEventListener('click', async () => {
     e.preventDefault();
     currentPage = 1;
     await fetchData();
-  })
+  });
 
   function renderTable(data) {
     const { metadata: { resultset }, results } = data;
@@ -265,7 +266,7 @@ button5.addEventListener('click', async () => {
   resetPage();
 
   try {
-    const { data } = await axios.get('https://api.giphy.com/v1/gifs/random?api_key=qRtG0VfOBoJ6HBPqscHtq8yJiA5d8T4p&tag=&rating=g')
+    const { data } = await axios.get('https://api.giphy.com/v1/gifs/random?api_key=qRtG0VfOBoJ6HBPqscHtq8yJiA5d8T4p&tag=&rating=g');
     console.log(data);
 
     const img = document.createElement('img');
@@ -275,4 +276,43 @@ button5.addEventListener('click', async () => {
     console.error(e);
   }
 
+});
+
+button6.addEventListener('click', async () => {
+  resetPage();
+
+  const form = document.getElementById('gifForm');
+  form.style.display = 'flex';
+
+  async function fetchData() {
+    const formData = new FormData(form);
+
+    const searchTerm = formData.get('search');
+
+    try {
+      const { data } = await axios.get('https://api.giphy.com/v1/gifs/search?api_key=qRtG0VfOBoJ6HBPqscHtq8yJiA5d8T4p&rating=g&lang=en&bundle=messaging_non_clips', {
+        params: {
+          q: searchTerm,
+        },
+      });
+      console.log(data);
+
+      const gifContainer = document.getElementById('gifs');
+
+      data.data.forEach(gif => {
+        const img = document.createElement('img');
+        img.src = gif.images.original.url;
+        gifContainer.appendChild(img);
+      })
+      gifContainer.style.display = 'block';
+    } catch (e) {
+      console.error(e);
+      alert(`Błąd w pozyskiwaniu danych. ${e.response?.data?.error ?? ''}`);
+    }
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    await fetchData();
+  })
 });
