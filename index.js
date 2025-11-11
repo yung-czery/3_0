@@ -17,6 +17,12 @@ function resetPage() {
 
   const pagination = document.getElementById('pagination');
   pagination.style.display = 'none';
+
+  const gifs = document.getElementById('gifs');
+  gifs.style.display = 'none';
+
+  const gifForm = document.getElementById('gifForm');
+  gifForm.style.display = 'none';
 }
 
 button1.addEventListener('click', () => {
@@ -284,6 +290,44 @@ button6.addEventListener('click', async () => {
   const form = document.getElementById('gifForm');
   form.style.display = 'flex';
 
+  let currentPage = 1;
+
+  const prevBtn = document.getElementById('prevPage');
+  const nextBtn = document.getElementById('nextPage');
+
+  function renderGifs(data) {
+    const { data: gifs, pagination } = data;
+
+    const paginationElm = document.getElementById('pagination');
+    const pageInfo = document.getElementById('pageInfo');
+
+    const gifContainer = document.getElementById('gifs');
+    gifContainer.innerHTML = '';
+    gifs.forEach(gif => {
+      const img = document.createElement('img');
+      img.src = gif.images.original.url;
+      gifContainer.appendChild(img);
+    })
+
+    const totalPages = Math.ceil( pagination.total_count / pagination.count);
+    pageInfo.textContent = `Strona ${currentPage} z ${totalPages}`;
+
+    gifContainer.style.display = 'block';
+    paginationElm.style.display = 'block';
+  }
+
+  prevBtn.addEventListener('click', () => {
+    if (currentPage > 1) {
+      currentPage--;
+      fetchData();
+    }
+  });
+
+  nextBtn.addEventListener('click', () => {
+    currentPage++;
+    fetchData();
+  });
+
   async function fetchData() {
     const formData = new FormData(form);
 
@@ -293,18 +337,12 @@ button6.addEventListener('click', async () => {
       const { data } = await axios.get('https://api.giphy.com/v1/gifs/search?api_key=qRtG0VfOBoJ6HBPqscHtq8yJiA5d8T4p&rating=g&lang=en&bundle=messaging_non_clips', {
         params: {
           q: searchTerm,
+          limit: 6,
+          offset: (currentPage - 1) * 6,
         },
       });
-      console.log(data);
 
-      const gifContainer = document.getElementById('gifs');
-
-      data.data.forEach(gif => {
-        const img = document.createElement('img');
-        img.src = gif.images.original.url;
-        gifContainer.appendChild(img);
-      })
-      gifContainer.style.display = 'block';
+      renderGifs(data);
     } catch (e) {
       console.error(e);
       alert(`Błąd w pozyskiwaniu danych. ${e.response?.data?.error ?? ''}`);
