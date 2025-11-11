@@ -2,6 +2,7 @@ const button1 = document.getElementById('cw1');
 const button2 = document.getElementById('cw2');
 const button3 = document.getElementById('cw3');
 const button4 = document.getElementById('cw4');
+const button5 = document.getElementById('cw5');
 
 const answer = document.getElementById('answer');
 
@@ -12,6 +13,9 @@ function resetPage() {
 
   const form4 = document.getElementById('dataForm');
   form4.style.display = 'none';
+
+  const pagination = document.getElementById('pagination');
+  pagination.style.display = 'none';
 }
 
 button1.addEventListener('click', () => {
@@ -75,7 +79,6 @@ button1.addEventListener('click', () => {
   });
 });
 
-
 button2.addEventListener('click', async () => {
   resetPage();
 
@@ -107,7 +110,6 @@ button2.addEventListener('click', async () => {
     console.error(e);
   }
 });
-
 
 button3.addEventListener('click', async () => {
   resetPage();
@@ -257,4 +259,20 @@ button4.addEventListener('click', async () => {
     currentPage++;
     fetchData();
   });
+});
+
+button5.addEventListener('click', async () => {
+  resetPage();
+
+  try {
+    const { data } = await axios.get('https://api.giphy.com/v1/gifs/random?api_key=qRtG0VfOBoJ6HBPqscHtq8yJiA5d8T4p&tag=&rating=g')
+    console.log(data);
+
+    const img = document.createElement('img');
+    img.src = data.data.images.original.url;
+    answer.appendChild(img);
+  } catch (e) {
+    console.error(e);
+  }
+
 });
