@@ -53,6 +53,40 @@
   <tbody></tbody>
 </table>
 
+<form id="dataForm" style="display: none;">
+  <label for="dataset">Wybierz dataset:</label>
+  <select id="dataset" name="dataset" required>
+    <option value="">Ładowanie...</option>
+  </select>
+
+  <label for="startDate">Data startowa:</label>
+  <input type="date" id="startDate" name="startDate" required>
+
+  <label for="endDate">Data końcowa:</label>
+  <input type="date" id="endDate" name="endDate" required>
+
+  <button type="submit">Zatwierdź</button>
+</form>
+
+<table id="cw4-table" style="display: none; margin: 2rem">
+  <thead>
+  <tr>
+    <th>Attributes</th>
+    <th>Data Type</th>
+    <th>Date</th>
+    <th>Station</th>
+    <th>Value</th>
+  </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<div id="pagination" style="display: none; text-align: center; margin-top: 1rem;">
+  <button id="prevPage">Poprzednia</button>
+  <span id="pageInfo"></span>
+  <button id="nextPage">Następna</button>
+</div>
+
 <script src="index.js"></script>
 </body>
 </html>

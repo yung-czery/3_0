@@ -143,3 +143,118 @@ button3.addEventListener('click', async () => {
   }
 });
 
+button4.addEventListener('click', async () => {
+  resetPage();
+
+  const form = document.getElementById('dataForm');
+  form.style.display = 'flex';
+
+  try {
+    const select = document.getElementById('dataset');
+    select.disabled = true;
+
+    const { data: { results } } = await axios.get('http://localhost:3000/datasets');
+
+    select.innerHTML = '';
+
+    const ids = results.map(dataset => dataset.id);
+    ids.forEach(id => {
+      const option = document.createElement('option');
+      option.value = id;
+      option.textContent = id;
+      select.appendChild(option);
+    })
+    select.disabled = false;
+
+  } catch (e) {
+    console.error(e);
+  }
+
+  const prevBtn = document.getElementById('prevPage');
+  const nextBtn = document.getElementById('nextPage');
+
+  let currentPage = 1;
+
+  async function fetchData() {
+    const formData = new FormData(form);
+
+    const payload = {
+      datasetid: formData.get('dataset'),
+      startdate: formData.get('startDate'),
+      enddate: formData.get('endDate'),
+    };
+
+    try {
+      const resultsPerPage = 5;
+
+      const { data } = await axios.get('http://localhost:3000/data', {
+        params: {
+          ...payload,
+          limit: resultsPerPage,
+          offset: (currentPage - 1) * resultsPerPage,
+        },
+      });
+
+      if (!data) {
+        alert('Brak danych dla wybranych parametrów.');
+        return;
+      }
+
+      renderTable(data);
+    } catch (e) {
+      console.error(e);
+      alert(`Błąd w pozyskiwaniu danych. ${e.response?.data?.error ?? ''}`);
+    }
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    currentPage = 1;
+    await fetchData();
+  })
+
+  function renderTable(data) {
+    const { metadata: { resultset }, results } = data;
+
+    const table = document.getElementById('cw4-table');
+    const pagination = document.getElementById('pagination');
+    const pageInfo = document.getElementById('pageInfo');
+
+    let tableBd = table.querySelector('tbody');
+    if (!tableBd) {
+      tableBd = document.createElement('tbody');
+      table.appendChild(tableBd);
+    }
+    tableBd.innerHTML = '';
+
+    results.forEach(result => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+          <td>${result.attributes}</td>
+          <td>${result.datatype}</td>
+          <td>${new Date(result.date).toLocaleDateString('pl-PL')}</td>
+          <td>${result.station}</td>
+          <td>${result.value.toLocaleString()}</td>
+        `;
+      tableBd.appendChild(row);
+    });
+
+    const totalPages = Math.ceil(resultset.count / resultset.limit);
+    pageInfo.textContent = `Strona ${currentPage} z ${totalPages}`;
+
+    table.style.display = 'table';
+    pagination.style.display = 'block';
+  }
+
+  prevBtn.addEventListener('click', () => {
+    if (currentPage > 1) {
+      currentPage--;
+      fetchData();
+    }
+  });
+
+  nextBtn.addEventListener('click', () => {
+    currentPage++;
+    fetchData();
+  });
+});
