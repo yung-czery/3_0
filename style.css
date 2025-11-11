@@ -94,25 +94,63 @@ tbody tr:hover {
     transition: background 0.2s ease;
 }
 
-/* Formularz dodawany dynamicznie */
+/* Formularz */
 form {
     display: flex;
-    gap: 0.5rem;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column; /* kolumnowo, lepiej przy dropdown + daty */
+    gap: 1rem;
     margin-top: 1rem;
+    max-width: 400px;
+    width: 100%;
 }
 
-input[type="text"] {
+/* Labelki w formularzu */
+form label {
+    font-weight: bold;
+}
+
+/* Inputy i select */
+input[type="text"],
+input[type="date"],
+select {
     padding: 0.6rem 1rem;
     font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: 6px;
     outline: none;
     transition: border 0.2s ease;
-    width: 260px;
+    width: 100%;
 }
 
-input[type="text"]:focus {
+input[type="text"]:focus,
+input[type="date"]:focus,
+select:focus {
     border-color: #007bff;
+}
+
+/* Button w formularzu */
+form button {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: none;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+form button:hover {
+    background: #0069d9;
+}
+
+form button:active {
+    transform: scale(0.97);
+}
+
+#answer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

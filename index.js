@@ -1,6 +1,7 @@
 const button1 = document.getElementById('cw1');
 const button2 = document.getElementById('cw2');
 const button3 = document.getElementById('cw3');
+const button4 = document.getElementById('cw4');
 
 const answer = document.getElementById('answer');
 
@@ -8,6 +9,9 @@ function resetPage() {
   answer.innerHTML = '';
   const tables = document.querySelectorAll('table');
   tables.forEach(table => table.style.display = 'none');
+
+  const form4 = document.getElementById('dataForm');
+  form4.style.display = 'none';
 }
 
 button1.addEventListener('click', () => {
@@ -78,7 +82,6 @@ button2.addEventListener('click', async () => {
   try {
     const { data } = await axios.get('http://localhost:3000/stations');
     const stations = data.results;
-    console.log(stations);
 
     const table = document.getElementById('cw2-table');
     let tableBd = table.querySelector('tbody');
@@ -106,4 +109,37 @@ button2.addEventListener('click', async () => {
 });
 
 
-button3.addEventListener('click', () => answer.textContent = '3');
+button3.addEventListener('click', async () => {
+  resetPage();
+
+  try {
+    const { data } = await axios.get('http://localhost:3000/datasets');
+
+    const datasets = data.results;
+
+    const table = document.getElementById('cw3-table');
+    let tableBd = table.querySelector('tbody');
+    if (!tableBd) {
+      tableBd = document.createElement('tbody');
+      table.appendChild(tableBd);
+    }
+    tableBd.innerHTML = '';
+
+    datasets.forEach(dataset => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+          <td>${dataset.uid}</td>
+          <td>${new Date(dataset.mindate).toLocaleDateString('pl-PL')}</td>
+          <td>${new Date(dataset.maxdate).toLocaleDateString('pl-PL')}</td>
+          <td>${dataset.name}</td>
+          <td>${dataset.datacoverage.toLocaleString()}</td>
+          <td>${dataset.id}</td>
+        `;
+      tableBd.appendChild(row);
+    });
+    table.style.display = 'table';
+  } catch (e) {
+    console.error(e);
+  }
+});
+
